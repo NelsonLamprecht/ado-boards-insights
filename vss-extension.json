@@ -1,20 +1,16 @@
 {\n  "$schema": "http://json.schemastore.org/vss-extension",
-  "id": "ado-boards-insights",
-  "name": "ADO Boards Insights",
-  "publisher": "NelsonLamprecht",
+  "id": "your.extension.id",
+  "name": "Your Extension Name",
+  "publisher": "Your Publisher Name",
   "version": "1.0.0",
-  "description": "An extension for ADO Boards insights.",
-  "contributions": [],
-  "icons": {
-    "default": "images/icon.png"
-  },
-  "files": [
-    { "path": "images/icon.png" },
-    { "path": "content/ado-boards-insights.html" }
-  ],
-  "homepage": "https://github.com/NelsonLamprecht/ado-boards-insights",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/NelsonLamprecht/ado-boards-insights.git"
-  }
-}
+  "description": "A description of your extension.",
+  "contributes": {\n    "commands": [{\n      "id": "your.command.id",
+      "description": "A description of the command."
+    }]\n  },\n  "files": [{\n      "path": "path/to/your/file",
+      "content": "Your content here."
+    }],\n  "icons": {\n    "default": "images/icon.png"
+  },\n  "media": [{\n    "path": "images/media.png",
+    "type": "image/png"
+  }],\n  "licenseTerms": "Your license terms here.\n  ",\n  "targets": [{\n    "id": "Microsoft.VisualStudio.Services",
+    "version": "1.0.0"
+  }]\n}
