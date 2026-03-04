@@ -1,0 +1,40 @@
+name: Build VSIX
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (webpack)
+        run: npm run build
+
+      - name: Install tfx-cli
+        run: npm install -g tfx-cli
+
+      - name: Package extension (.vsix)
+        run: |
+          ls -la vss-extension.json
+          npm run package
+          ls -la *.vsix || true
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ado-boards-insights-vsix
+          path: '*.vsix'
