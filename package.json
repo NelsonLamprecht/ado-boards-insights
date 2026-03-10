@@ -2,13 +2,15 @@
   "name": "ado-boards-insights",
   "version": "1.0.0",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "package": "npm run build && tfx extension create --manifest-globs vss-extension.json"
   },
   "engines": {
     "node": ">=24",
     "npm": ">=10"
   },
   "devDependencies": {
+    "tfx-cli": "^0.17.0",
     "ts-loader": "^9.0.0",
     "typescript": "^4.0.0",
     "webpack": "^5.0.0",
