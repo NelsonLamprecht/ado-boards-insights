@@ -1,7 +1,7 @@
 {
   "manifestVersion": 1,
-  "id": "ado-boards-insights",
-  "name": "ADO Boards Insights",
+  "id": "azure-devops-boards-insights",
+  "name": "Azure DevOps Boards Insights",
   "publisher": "KayzaApplications",
   "version": "0.1.0",
   "description": "Sums Story Points for the selected sprint and shows the total in the board header.",
