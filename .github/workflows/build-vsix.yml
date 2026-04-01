@@ -40,7 +40,15 @@ jobs:
         if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
         run: npm run package
 
-      - name: Upload VSIX artifact
+      - name: Upload dev VSIX artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v7
+        with:
+          name: ado-boards-insights-dev-vsix
+          path: '*.vsix'
+
+      - name: Upload prod VSIX artifact
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
         uses: actions/upload-artifact@v7
         with:
           name: ado-boards-insights-vsix
