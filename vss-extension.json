@@ -4,11 +4,11 @@
   "name": "Azure DevOps Boards Insights",
   "publisher": "KayzaApplications",
   "version": "0.2.0",
-  "description": "Shows total Story Points for backlog items.",
+  "description": "Shows total Story Points for visible backlog items.",
   "public": false,
   "targets": [
     {
-      "id": "Microsoft.VisualStudio.Services"
+      "id": "Microsoft.VisualStudio.Services.Cloud"
     }
   ],
   "categories": [
@@ -16,14 +16,19 @@
   ],
   "contributions": [
     {
-      "id": "backlog-storypoints-content",
-      "type": "ms.vss-web.hub-content",
-      "description": "Shows story points total for the backlog",
+      "id": "backlog-storypoints-action",
+      "type": "ms.vss-web.action",
+      "description": "Shows story points total for visible backlog items",
       "targets": [
-        "ms.vss-work-web.backlog-hub"
+        "ms.vss-work-web.backlog-toolbar-menu"
       ],
       "properties": {
-        "name": "Backlog Story Points",
+        "text": "Story Points",
+        "title": "Show Backlog Story Points Total",
+        "icon": {
+          "light": "img/icon.png",
+          "dark": "img/icon.png"
+        },
         "uri": "content.html"
       }
     }
@@ -43,6 +48,10 @@
     },
     {
       "path": "README.md"
+    },
+    {
+      "path": "img",
+      "addressable": true
     }
   ]
 }
