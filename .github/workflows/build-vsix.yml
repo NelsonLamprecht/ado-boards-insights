@@ -2,10 +2,13 @@ name: Build VSIX
 
 on:
   pull_request:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
     inputs:
       release_tag:
-        description: 'Tag to publish (e.g. v0.1.2)'
+        description: 'Tag to publish (e.g. v0.3.0 or v0.3.0-rc.1)'
         required: false
         type: string
       publish_release:
@@ -32,12 +35,43 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Set CI dev prerelease version
+        if: github.event_name == 'pull_request'
+        run: npm run version:dev:ci -- ${{ github.run_number }}
+
+      - name: Validate release tag input
+        if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
+        run: |
+          if [[ ! "${{ inputs.release_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$ ]]; then
+            echo "release_tag must match vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-rc.N (e.g. v1.2.3 or v1.2.3-rc.1)."
+            exit 1
+          fi
+
+      - name: Validate pushed tag
+        if: github.event_name == 'push'
+        run: |
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$ ]]; then
+            echo "Tag must match vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-rc.N"
+            exit 1
+          fi
+
+      - name: Apply release tag version
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != '')
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="${{ inputs.release_tag }}"
+          fi
+          npm version --no-git-tag-version "${TAG#v}"
+          npm run sync:prod
+
       - name: Package dev extension (.vsix)
         if: github.event_name == 'pull_request'
         run: npm run package:dev
 
       - name: Package prod extension (.vsix)
-        if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != '')
         run: npm run package
 
       - name: Upload dev VSIX artifact
@@ -48,14 +82,14 @@ jobs:
           path: '*.vsix'
 
       - name: Upload prod VSIX artifact
-        if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
+        if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != '')
         uses: actions/upload-artifact@v7
         with:
           name: ado-boards-insights-vsix
           path: '*.vsix'
 
   publish-release:
-    if: github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != ''
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.publish_release && inputs.release_tag != '')
     needs: build-and-package
     runs-on: ubuntu-latest
     permissions:
@@ -67,22 +101,10 @@ jobs:
           name: ado-boards-insights-vsix
           path: dist-artifacts
 
-      - name: Validate release tag input
-        run: |
-          if [[ -z "${{ inputs.release_tag }}" ]]; then
-            echo "release_tag is required when publishing a release."
-            exit 1
-          fi
-
-          if [[ ! "${{ inputs.release_tag }}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
-            echo "release_tag must match vMAJOR.MINOR.PATCH (optionally with a pre-release/build suffix), e.g. v1.2.3 or v1.2.3-rc.1"
-            exit 1
-          fi
-
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           files: 'dist-artifacts/*.vsix'
           generate_release_notes: true
-          tag_name: ${{ inputs.release_tag }}
+          tag_name: ${{ github.event_name == 'push' && github.ref_name || inputs.release_tag }}
           target_commitish: ${{ github.sha }}

@@ -3,8 +3,14 @@
   "version": "0.2.0",
   "scripts": {
     "build": "webpack",
-    "package": "npm run build && tfx extension create --manifest-globs vss-extension.json",
-    "package:dev": "npm run build && tfx extension create --manifest-globs vss-extension.json vss-extension.dev.json"
+    "sync:prod": "node scripts/version-tools.cjs sync vss-extension.json",
+    "sync:dev": "node scripts/version-tools.cjs sync vss-extension.dev.json",
+    "version:dev": "npm version patch --no-git-tag-version && npm run sync:prod && npm run sync:dev",
+    "version:dev:ci": "node scripts/version-tools.cjs dev-ci",
+    "version:rc": "node scripts/version-tools.cjs rc && npm run sync:prod",
+    "version:prod": "node scripts/version-tools.cjs prod && npm run sync:prod",
+    "package": "npm run sync:prod && npm run build && tfx extension create --manifest-globs vss-extension.json",
+    "package:dev": "npm run sync:dev && npm run build && tfx extension create --manifest-globs vss-extension.dev.json vss-extension.json"
   },
   "engines": {
     "node": ">=24",

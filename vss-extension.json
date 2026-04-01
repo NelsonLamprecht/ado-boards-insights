@@ -3,17 +3,25 @@
   "id": "azure-devops-boards-insights",
   "name": "Azure DevOps Boards Insights",
   "publisher": "KayzaApplications",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sums Story Points for the selected sprint and shows the total in the board header.",
   "public": false,
-  "targets": [{ "id": "Microsoft.VisualStudio.Services" }],
-  "categories": ["Azure Boards"],
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "categories": [
+    "Azure Boards"
+  ],
   "contributions": [
     {
       "id": "boards-storypoints-content",
       "type": "ms.vss-web.hub-content",
       "description": "Shows story points total for the sprint",
-      "targets": ["ms.vss-work-web.board-hub"],
+      "targets": [
+        "ms.vss-work-web.board-hub"
+      ],
       "properties": {
         "name": "Boards Story Points",
         "uri": "content.html"
@@ -21,10 +29,20 @@
     }
   ],
   "files": [
-    { "path": "content.html" },
-    { "path": "dist/content.js" },
-    { "path": "dist/content.js.map" },
-    { "path": "src/styles.css" },
-    { "path": "README.md" }
+    {
+      "path": "content.html"
+    },
+    {
+      "path": "dist/content.js"
+    },
+    {
+      "path": "dist/content.js.map"
+    },
+    {
+      "path": "src/styles.css"
+    },
+    {
+      "path": "README.md"
+    }
   ]
 }
