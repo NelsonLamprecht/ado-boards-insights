@@ -1,3 +1,60 @@
 body {
-    font-family: Arial, sans-serif;
+    margin: 0;
+    font-family: Segoe UI, Arial, sans-serif;
+    color: #242424;
+    background: #ffffff;
+}
+
+.panel {
+    border: 1px solid #e1e4e8;
+    border-radius: 8px;
+    padding: 12px;
+    margin: 8px;
+    max-width: 420px;
+    background: #f8f9fb;
+}
+
+.panel h1 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.total-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.label {
+    color: #4a4a4a;
+    font-size: 12px;
+}
+
+.value {
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 700;
+    color: #0078d4;
+}
+
+.scope,
+.status {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #5c5c5c;
+}
+
+.label--selected {
+    color: #107c41;
+    font-weight: 600;
+}
+
+.value {
+    transition: color 0.15s;
+}
+
+.label--selected ~ .value {
+    color: #107c41;
 }

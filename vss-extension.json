@@ -4,7 +4,7 @@
   "name": "Azure DevOps Boards Insights",
   "publisher": "KayzaApplications",
   "version": "0.2.0",
-  "description": "Sums Story Points for the selected sprint and shows the total in the board header.",
+  "description": "Shows total Story Points for backlog items.",
   "public": false,
   "targets": [
     {
@@ -16,14 +16,14 @@
   ],
   "contributions": [
     {
-      "id": "boards-storypoints-content",
+      "id": "backlog-storypoints-content",
       "type": "ms.vss-web.hub-content",
-      "description": "Shows story points total for the sprint",
+      "description": "Shows story points total for the backlog",
       "targets": [
-        "ms.vss-work-web.board-hub"
+        "ms.vss-work-web.backlog-hub"
       ],
       "properties": {
-        "name": "Boards Story Points",
+        "name": "Backlog Story Points",
         "uri": "content.html"
       }
     }
