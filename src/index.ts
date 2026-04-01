@@ -8,12 +8,19 @@ let storyPointsById = new Map<number, number>();
 let selectedIds: number[] = [];
 let scopeLabel = "";
 
-SDK.init();
+const logPrefix = "[BoardsInsights]";
+
+SDK.init({ loaded: false, applyTheme: true });
+console.log(`${logPrefix} SDK.init called`, {
+  contributionId: SDK.getContributionId(),
+  webContext: SDK.getWebContext(),
+});
 
 // The backlog hub calls onSelectionChanged on the registered contribution object
 // whenever the user selects or deselects rows in the grid.
 SDK.register(SDK.getContributionId(), {
   onSelectionChanged: (data: any) => {
+    console.log(`${logPrefix} onSelectionChanged`, data);
     // ADO may pass { workItemIds: number[] } or an array directly.
     if (Array.isArray(data)) {
       selectedIds = data.map((x: any) => (typeof x === "number" ? x : x.id));
@@ -25,6 +32,7 @@ SDK.register(SDK.getContributionId(), {
 });
 
 SDK.ready().then(async () => {
+  console.log(`${logPrefix} SDK.ready resolved`);
   const statusEl = document.getElementById("status");
 
   try {
@@ -43,6 +51,7 @@ SDK.ready().then(async () => {
     };
 
     scopeLabel = `${project}${teamContext.team ? ` / ${teamContext.team}` : ""}`;
+    console.log(`${logPrefix} Resolved team context`, teamContext);
 
     if (statusEl) {
       statusEl.innerText = `Loading backlog story points for ${scopeLabel}…`;
@@ -79,6 +88,7 @@ SDK.ready().then(async () => {
 
     const wiqlResult = await witClient.queryByWiql(wiql, project);
     const ids = wiqlResult?.workItems?.map((w) => w.id) ?? [];
+    console.log(`${logPrefix} WIQL result`, { count: ids.length });
 
     if (ids.length === 0) {
       if (statusEl) statusEl.innerText = "No backlog items found.";
@@ -102,15 +112,19 @@ SDK.ready().then(async () => {
 
     if (statusEl) statusEl.innerText = `Loaded ${ids.length} backlog items.`;
     renderSummary();
+    SDK.notifyLoadSucceeded();
+    console.log(`${logPrefix} Extension load succeeded`);
   } catch (err: any) {
     const msg = err?.message ?? String(err);
     if (statusEl) statusEl.innerText = `Extension error: ${msg}`;
     const totalEl = document.getElementById("total");
     if (totalEl) totalEl.innerText = "-";
-    console.error(err);
+    SDK.notifyLoadFailed(msg);
+    console.error(`${logPrefix} Extension load failed`, err);
   }
 }).catch((err) => {
-  console.error("SDK.ready failed", err);
+  SDK.notifyLoadFailed(String(err));
+  console.error(`${logPrefix} SDK.ready failed`, err);
   const statusEl = document.getElementById("status");
   if (statusEl) statusEl.innerText = `Initialization error: ${err}`;
 });
@@ -138,4 +152,9 @@ function renderSummary(): void {
     countEl.innerText = `${ids.length} ${isSelection ? "selected" : "backlog"} item${ids.length !== 1 ? "s" : ""}`;
   }
   if (scopeEl) scopeEl.innerText = `Scope: ${scopeLabel}`;
+  console.log(`${logPrefix} renderSummary`, {
+    mode: isSelection ? "selection" : "total",
+    idCount: ids.length,
+    total,
+  });
 }
