@@ -5,6 +5,11 @@ on:
   push:
     branches:
       - main
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
 
 jobs:
   build-and-package:
@@ -38,3 +43,10 @@ jobs:
         with:
           name: ado-boards-insights-vsix
           path: '*.vsix'
+
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: '*.vsix'
+          generate_release_notes: true
