@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "ado-boards-insights",
   "name": "ADO Boards Insights",
-  "publisher": "NelsonLamprecht",
+  "publisher": "KayzaApplications",
   "version": "0.1.0",
   "description": "Sums Story Points for the selected sprint and shows the total in the board header.",
   "public": false,
