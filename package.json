@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "scripts": {
     "build": "webpack",
-    "package": "npm run build && tfx extension create --manifest-globs vss-extension.json"
+    "package": "npm run build && tfx extension create --manifest-globs vss-extension.json",
+    "package:dev": "npm run build && tfx extension create --manifest-globs vss-extension.json vss-extension.dev.json"
   },
   "engines": {
     "node": ">=24",
