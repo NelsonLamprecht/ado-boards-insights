@@ -17,14 +17,13 @@
   "contributions": [
     {
       "id": "backlog-storypoints-action",
-      "type": "ms.vss-web.action",
+      "type": "ms.vss-web.hub",
       "description": "Shows story points total for visible backlog items",
       "targets": [
-        "ms.vss-work-web.backlog-toolbar-menu"
+        "ms.vss-work-web.requirement-backlog-toolpane"
       ],
       "properties": {
-        "text": "Story Points",
-        "title": "Show Backlog Story Points Total",
+        "name": "Story Points",
         "icon": {
           "light": "img/icon.png",
           "dark": "img/icon.png"
