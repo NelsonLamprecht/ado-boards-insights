@@ -33,6 +33,9 @@ SDK.register(SDK.getContributionId(), {
 
 SDK.ready().then(async () => {
   console.log(`${logPrefix} SDK.ready resolved`);
+  // Notify load succeeded immediately so ADO shows the pane without waiting for data.
+  SDK.notifyLoadSucceeded();
+  console.log(`${logPrefix} notifyLoadSucceeded called`);
   const statusEl = document.getElementById("status");
 
   try {
@@ -92,6 +95,7 @@ SDK.ready().then(async () => {
 
     if (ids.length === 0) {
       if (statusEl) statusEl.innerText = "No backlog items found.";
+      console.log(`${logPrefix} No backlog items found`);
       renderSummary();
       return;
     }
@@ -111,9 +115,8 @@ SDK.ready().then(async () => {
     }
 
     if (statusEl) statusEl.innerText = `Loaded ${ids.length} backlog items.`;
-    renderSummary();
-    SDK.notifyLoadSucceeded();
     console.log(`${logPrefix} Extension load succeeded`);
+    renderSummary();
   } catch (err: any) {
     const msg = err?.message ?? String(err);
     if (statusEl) statusEl.innerText = `Extension error: ${msg}`;
